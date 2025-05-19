@@ -1,0 +1,3 @@
+resources:
+- forwarder-frontend-virtualservice.yaml
+- forwarder-monitor-virtualservice.yaml

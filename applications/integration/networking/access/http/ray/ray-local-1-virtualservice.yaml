@@ -1,15 +1,15 @@
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: kiali-virtualservice
+  name: ray-local-1-virtualservice
 spec:
   hosts:
-  - "kiali.oss"
+  - "ray.local-1.oss"
   gateways:
   - dashboard-gateway
   http:
   - route:
     - destination:
-        host: kiali.istio-system.svc.cluster.local
+        host: ray-local-dash-1.integration.svc.cluster.local
         port:
-          number: 20001
+          number: 8380

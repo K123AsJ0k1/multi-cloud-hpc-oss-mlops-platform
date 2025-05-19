@@ -1,0 +1,15 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: ray-main-virtualservice
+spec:
+  hosts:
+  - "ray.main.oss"
+  gateways:
+  - dashboard-gateway
+  http:
+  - route:
+    - destination:
+        host: raycluster-kuberay-head-svc.default.svc.cluster.local
+        port:
+          number: 8265
