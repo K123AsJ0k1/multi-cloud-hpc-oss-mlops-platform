@@ -1,9 +1,9 @@
 import ray
 
 @ray.remote(
-    num_gpus = 1
+    num_gpus=1
 )
-class LLM:
+class LLM_Model:
     def __init__(
         self,
         model_name

@@ -6,7 +6,7 @@ import json
 
 from importlib.metadata import version
 
-from actors.llm import LLM
+from actors.llm import LLM_Model
 
 from functions.resources import check_clusters
 
@@ -59,15 +59,21 @@ def llm_inference(
                 print(head_url)
                 model_name = data_parameters['model-name']
                 prompts = data_parameters['prompts']
-                print(model_name)
-                print(prompts)
+                #print(model_name)
+                #print(prompts)
                 print('Testing node')
                 with head_client:
                     # Normal scheduling of functions
-                    status = ray.get(gpu_test.remote())
-                    print(status)
+                    #status = ray.get(gpu_test.remote())
+                    #print(status)
+                    actor_ref = LLM_Model.remote(
+                        model_name = model_name
+                    )
+                    actor_output = ray.get(actor_ref.inference.remote(
+                        prompts = prompts  
+                    ))
+                    print(actor_output)
                 head_client.disconnect()
-
         return True
     except Exception as e:
         print('LLM inference error')
