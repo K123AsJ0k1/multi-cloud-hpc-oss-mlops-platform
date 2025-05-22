@@ -10,22 +10,6 @@ from actors.llm import LLM_Model
 
 from functions.resources import check_clusters
 
-@ray.remote(
-    num_gpus=1
-)
-def gpu_test():
-    try:
-        # required packages
-        import torch
-        print('Checking GPU with torch')
-        device = 'cuda' if torch.cuda.is_available() else 'cpu'
-        print('GPU device: ' + str(device))
-        return True
-    except Exception as e:
-        print('GPU test error')
-        print(e)
-        return False 
-
 def llm_inference(
     process_parameters: any,
     storage_parameters: any,
@@ -52,20 +36,18 @@ def llm_inference(
                     allow_multiple = True,
                     runtime_env = {
                         'pip': [
-                            'torch'
+                            'torch',
+                            'accelerate',
+                            'transformers'
                         ]
                     }
                 )  
                 print(head_url)
                 model_name = data_parameters['model-name']
                 prompts = data_parameters['prompts']
-                #print(model_name)
-                #print(prompts)
                 print('Testing node')
                 with head_client:
                     # Normal scheduling of functions
-                    #status = ray.get(gpu_test.remote())
-                    #print(status)
                     actor_ref = LLM_Model.remote(
                         model_name = model_name
                     )
@@ -85,6 +67,8 @@ if __name__ == "__main__":
     print('Python version is:' + str(sys.version))
     print('Ray version is:' + version('ray'))
     print('Torch version is:' + version('torch'))
+    print('Transformers version is' + version('transformers'))
+    print('Accelerate version is' + version('accelerate'))
 
     input = json.loads(sys.argv[1])
 
